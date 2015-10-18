@@ -37,18 +37,21 @@ def new_dirty():
 
   return 'Dishes have been marked dirty'
 
-@app.route('/toggle')
+@app.route('/toggle', methods=['POST'])
 def toggle_state():
-  #Get the latest DishwasherState by PK
-  latestState = DishwasherState.query.order_by(DishwasherState.id.desc()).first_or_404()
+  if request.method == 'POST':
+    #Get the latest DishwasherState by PK
+    latestState = DishwasherState.query.order_by(DishwasherState.id.desc()).first_or_404()
 
-  #Save the inverse of the current state
-  flipState = not latestState.is_clean
-  new = DishwasherState(flipState)
-  db.session.add(new)
-  db.session.commit()
+    #Save the inverse of the current state
+    flipState = not latestState.is_clean
+    new = DishwasherState(flipState)
+    db.session.add(new)
+    db.session.commit()
 
-  return 'Dishwasher State has been toggled'
+    return 'Dishwasher State has been toggled'
+  else:
+    abort(404)
 
 if __name__ == '__main__':
   app.run()
