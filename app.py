@@ -21,21 +21,21 @@ def flask_dash():
   else:
     return 'The dishes are dirty'
 
-@app.route('/clean')
-def new_clean():
-  clean = DishwasherState(True)
-  db.session.add(clean)
-  db.session.commit()
+#@app.route('/clean')
+#def new_clean():
+#  clean = DishwasherState(True)
+#  db.session.add(clean)
+#  db.session.commit()
+#
+#  return 'Dishes have been marked clean'
 
-  return 'Dishes have been marked clean'
+#@app.route('/dirty')
+#def new_dirty():
+#  dirty = DishwasherState(False)
+#  db.session.add(dirty)
+#  db.session.commit()
 
-@app.route('/dirty')
-def new_dirty():
-  dirty = DishwasherState(False)
-  db.session.add(dirty)
-  db.session.commit()
-
-  return 'Dishes have been marked dirty'
+#  return 'Dishes have been marked dirty'
 
 @app.route('/toggle', methods=['POST'])
 def toggle_state():
