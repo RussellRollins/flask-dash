@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, abort
 from flask.ext.sqlalchemy import SQLAlchemy
 import os
 
@@ -40,16 +40,20 @@ def flask_dash():
 @app.route('/toggle', methods=['POST'])
 def toggle_state():
   if request.method == 'POST':
-    #Get the latest DishwasherState by PK
-    latestState = DishwasherState.query.order_by(DishwasherState.id.desc()).first_or_404()
+    #Some semplance of security
+    if request.form['key'] == os.environ['ACCESS_KEY']:
+      #Get the latest DishwasherState by PK
+      latestState = DishwasherState.query.order_by(DishwasherState.id.desc()).first_or_404()
 
-    #Save the inverse of the current state
-    flipState = not latestState.is_clean
-    new = DishwasherState(flipState)
-    db.session.add(new)
-    db.session.commit()
+      #Save the inverse of the current state
+      flipState = not latestState.is_clean
+      new = DishwasherState(flipState)
+      db.session.add(new)
+      db.session.commit()
 
-    return 'Dishwasher State has been toggled'
+      return 'Dishwasher State has been toggled'
+    else:
+      abort(403)
   else:
     abort(404)
 
