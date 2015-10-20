@@ -1,6 +1,7 @@
-from flask import Flask, request, abort
+from flask import Flask, request, abort, render_template, flash
 from flask.ext.sqlalchemy import SQLAlchemy
 import os
+import cleanliness
 
 app = Flask(__name__)
 app.config.from_object(os.environ['APP_SETTINGS'])
@@ -11,15 +12,11 @@ from models import *
 @app.route('/')
 def flask_dash():
   #Get the latest DishwasherState by PK
-  latestState = DishwasherState.query.order_by(DishwasherState.id.desc()).first_or_404()
+  latestState = DishwasherState.query.order_by(DishwasherState.id.desc()).first_or_404()   
 
-  #If that state is clean
-  if latestState.is_clean:
-    return 'The dishes are clean'
-
-  #If that state is  dirty
-  else:
-    return 'The dishes are dirty'
+  return render_template('home.html',
+                         message=cleanliness.message(latestState.is_clean),
+                         bg_color='bg-success' if latestState.is_clean else 'bg-danger') 
 
 #@app.route('/clean')
 #def new_clean():
