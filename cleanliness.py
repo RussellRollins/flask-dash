@@ -23,4 +23,4 @@ def message(is_clean):
     return select_rand_message(dirty_messages)
 
 def select_rand_message(message_array):
-  return message_array[random.randrange(0,len(clean_messages),1)] 
+  return message_array[random.randrange(0,len(message_array),1)] 
